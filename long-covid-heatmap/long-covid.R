@@ -15,8 +15,6 @@ showtext_auto()
 
 probability <- read_csv("long-covid-heatmap/long-covid-plain.csv")
 
-melt(as.matrix(t(probability)))
-
 dev.new(width=900, height=900, unit="px", noRStudioGD = TRUE)
 ggplot(melt(as.matrix(t(probability))), aes(X1,X2, fill=value)) +
   geom_tile(aes(fill = value), colour = "white") +
