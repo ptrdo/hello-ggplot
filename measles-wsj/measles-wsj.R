@@ -233,39 +233,63 @@ showtext_auto()
 )
 
 
-# set state abbreviations
+# set aes to state abbreviations
 aesthetic <- aes(y=state, x=year, fill=incidence)
 ggplot(datatall, aesthetic) + 
   geom_tile(width=1,height=1,colour="white",size=0.5) +
-# geom_tile(data = . %>% filter(region == "South"),width=1,height=1,colour="white",size=0.5) +
   scale_fill_gradientn(
     limits=c(0,4000),
-    values=c(0,0.01,0.02,0.03,0.09,0.1,0.15,0.25,0.4,0.5,1), 
-    colours=c("#e7f0fa","aliceblue","lightblue","deepskyblue","seagreen","gold","orange","goldenrod","brown","orangered","firebrick"),
+    values=c(0,0.05,0.2,0.4,1), 
+    colours=c("seashell","tomato","red","firebrick","firebrick"),
     breaks=(seq(0,4e3,by=1e3)),
     labels=c("0k","1k","2k","3k","4k"),
-    na.value="ghostwhite"
+    na.value="white"
   ) +
   geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
   geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles") +
+  ggtitle("Measles Cases") +
   annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=8) +
+  guides(fill=guide_colorbar(ticks.colour = NA)) +
   theme(
     title = element_text(size=32),
     axis.text.x = element_text(size=22),
-    axis.text.y = element_text(size=14, hjust=1, color="deepskyblue"),
+    axis.text.y = element_text(size=14, hjust=1, color="red"),
     text = element_text(size=32, family="azeret-mono"),
-    legend.text = element_text(size=16)
+    legend.text = element_text(size=16),
+    legend.position = c(0.85,0.96),
+    legend.background = element_rect(fill=NA),
+    plot.margin=margin(2,4,3,4,"lines")
   )
 
 
+###########################################
 
-
-
-
+# blisters
+aesthetic <- aes(y=state, x=year)
+ggplot(datatall, aesthetic) + 
+  geom_point(aes(size=incidence),color="tomato",stroke=0.5,alpha=0.8) +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="tomato",linetype=3) +
+  scale_size_continuous(range=c(0.1,6),breaks=c(0,1e3,2e3),labels=c('0k','1k','2k')) +
+  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
+  scale_y_discrete(limits = rev) +
+  xlab(NULL) + ylab(NULL) +
+  ggtitle("Measles Cases") +
+  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=6,color="tomato") +
+  theme(
+    title = element_text(size=32),
+    axis.text.x = element_text(size=22),
+    axis.text.y = element_text(size=14, hjust=1, color="tomato"),
+    text = element_text(size=32, family="azeret-mono"),
+    legend.text = element_text(size=16,color="tomato"),
+    legend.position = c(0.84,0.99),
+    legend.background = element_rect(fill=NA),
+    plot.margin=margin(2,4,3,4,"lines"),
+    panel.background=element_rect(fill="#faf9f5")
+  )
 
 
 
@@ -296,6 +320,7 @@ dataregions <- dataregions %>%
 aesthetic <- aes(y=region, x=year, fill=incidence)
 ggplot(dataregions, aesthetic) + 
   geom_tile(width=1,height=1,colour="white",size=0.5) +
+# geom_tile(data = . %>% filter(region == "South"),width=1,height=1,colour="white",size=0.5) +
   theme_minimal() +
   scale_fill_gradientn(
     limits=c(0,4000),
@@ -329,7 +354,6 @@ ggplot(dataregions, aesthetic) +
     axis.text.x = element_text(size=20),
     axis.text.y = element_text(size=16)
   )
-
 
 
 ######################
