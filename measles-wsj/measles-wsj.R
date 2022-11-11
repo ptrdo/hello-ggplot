@@ -1,4 +1,11 @@
+# clear workspace
+# this is important to zero-out ambient themes
+rm(list=ls())
+ls()
 
+
+library(tidyverse) # read_csv
+library(reshape) # melt
 
 
 tycho <-  read_csv("measles-wsj/data/tycho_measles_1928_2010.csv")
@@ -9,53 +16,116 @@ datatall <- melt(datatall, id.vars = c("Year","AdminISO","AdminName","Population
 colnames(datatall) <- c("year","state","statename","population","cases","incidence")
 
 
-# the aesthetic
-aesthetic <- aes(y=statename, x=year, fill=incidence)
-
-
 # basics
-p <- ggplot(datatall, aesthetic)
+ggplot(data=datatall, aes(x=population, y=statename))
+
+
+# store the aesthetic
+aesthetic = aes(x=population, y=statename)
+
+
+# add a plot method (try _col, _line, _point, _jitter, _boxplot, _blank)
+ggplot(datatall, aesthetic) + geom_point()
+
+
+# alternative with infix (chain) operator
+datatall %>%
+  ggplot(aesthetic) +
+  geom_col(aes(fill=year))
+
+
+# storing the plot
+p <- ggplot(datatall, aesthetic) +
+  geom_col(aes(fill=year))
 p
 
 
-# themed
-p <- p + 
-  theme_minimal() +
+# wrap the expression for easier execution
+(temp <- p + theme_bw())
+
+
+# applying a new starting point (try _dark, _gray, _bw, _void, _test)
+(temp <- p + theme_classic())
+
+
+# add breathing room around the plot (note that 'temp' preserves 'p')
+(temp <- p +
   theme(
-    plot.margin=margin(2,2,2,2,"lines")
+    plot.margin = margin(2,3,4,3,"lines"),
+    axis.ticks = element_blank()
   )
+)
+
+
+# the workspace theme can be set, updated, and extended independently
+mytheme <- theme_set(theme_classic()) 
+
+
+# verify what the 'default' now is
+theme_get()$panel.background
+
+
+# modify the custom theme
+mytheme <- theme_replace(
+  plot.margin = margin(2,3,4,3,"lines"),
+  axis.ticks = element_blank(),
+  panel.background=element_rect(fill="beige")
+)
+
+
+# check again (see:fill)
+theme_get()$panel.background
+
+
+# verify that the change works (using the workspace theme)
 p
 
 
-# blank the grid
-p <- p +
-  theme(
-    plot.margin=margin(2,2,2,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white"))
-p
+# apply some scales to set zero and flip the y-axis
+(temp <- temp +  
+    scale_x_continuous(expand=c(0,0)) +
+    scale_y_discrete(limits = rev) +
+    xlab(NULL) + ylab(NULL)
+)
 
 
-# reorient y, expand x, remove labels, add breaks
-p <- p +  
-  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
+# remake the aesthetic to chart incidence (not population)
+aesthetic = aes(x=year, y=statename, fill=incidence)
+
+
+# change the chart method to 'tile', keeping the basics (from above)
+(p <- ggplot(datatall, aesthetic) +
+  geom_tile(width=1, height=1, colour="white", size=0.5) +
+  scale_x_continuous(expand=c(0,0)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL)
-p
+)
+
+# updates to line-items will supersede previous (see:breaks)
+(p <- p + scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)))
 
 
-# apply the tile
-p <- p +
-  geom_tile(width=1, height=1)
-p
+# apply a simple gradient scale 
+(p <- p + 
+  scale_fill_gradientn(
+    limits=c(0,4000),
+    values=c(0,1),
+    colours=c("gold","red")
+  )
+)
 
+# refine (and supersede) gradient scale, and account for NA data
+(p <- p + 
+    scale_fill_gradientn(
+      limits=c(0,4000),
+      values=c(0,0.05,0.2,1),
+      colours=c("beige","gold","red","firebrick"),
+      na.value="white"
+    )
+)
 
-# apply the gradient
-p <- p +
+# refine the gradient further, and set the legend
+(p <- p +
   scale_fill_gradientn(
     limits=c(0,4000),
     values=c(
@@ -86,35 +156,12 @@ p <- p +
     labels=c("0k","1k","2k","3k","4k"),
     na.value="ghostwhite"
   )
-p
+)
 
-
-# stroke and annotate
-p <- p +
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="black",linetype=1) +
-  theme(
-    panel.background=element_rect(fill="white", color="white")
-  )
-p
-
-
-# style the legend
-p <- p +
-  theme(
-    plot.margin=margin(2,2,4,2,"lines"),
-    legend.direction = "horizontal",
-    legend.position = c(0.5,-.1),
-    legend.title = element_blank(),
-    legend.key.height = unit(8,'pt'),
-    legend.key.width = unit(32,'pt')
-  )
-p
-
-
-# annotate and title
-p <- p + 
+# title and annotate
+(p <- p +
   ggtitle("Measles") +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="black",linetype=1) +
   annotate(
     "text",
     label="Vaccine Introduced", 
@@ -122,35 +169,75 @@ p <- p +
     y=53, 
     vjust=1, 
     hjust=0, 
-    size=8
+    size=4
   )
+)
+
+
+# style the legend
+mytheme <- theme_replace(
+  plot.margin=margin(2,3,4,3,"lines"),
+  legend.direction = "horizontal",
+  legend.position = c(0.5,-.1),
+  legend.title = element_blank(),
+  legend.text = element_text(size=8),
+  legend.key.height = unit(10,'pt'),
+  legend.key.width = unit(32,'pt')
+)
+
+# check the change
 p
 
 
-# text and text size
-pp <- p +
-  theme (
-    text = element_text(size=16, family="sans"),
-    title = element_text(size=32),
-    axis.text.x = element_text(size=20),
-    axis.text.y = element_text(size=12)
-  )
-pp
+# style text and text size
+mytheme <- theme_replace(
+  text = element_text(size=16, family="sans"),
+  title = element_text(size=16),
+  axis.text.x = element_text(size=12),
+  axis.text.y = element_text(size=8, hjust=1)
+)
+
+# check the change
+p
+
+# finally, blank the background and edge
+mytheme <- theme_replace(
+  panel.background = element_rect(fill="white",color="white"),
+  axis.line = element_line(color="white")
+)
+
+# check the change
+p
 
 
 # add fonts
 library(showtext)
 font_add_google(name="Azeret Mono", family="azeret-mono")
-font_add_google(name="Barlow", family="barlow")
 showtext_auto()
 
+# apply the fonts and update sizes AS OVERRIDE TO PLOT
+(p <- p + 
+  annotate(
+    "text",
+    label="Vaccine Introduced",
+    family="azeret-mono",
+    x=1963,y=54,vjust=1,hjust=0,size=7
+  ) +
+  theme(
+    title = element_text(size=32),
+    axis.text.x = element_text(size=24),
+    axis.text.y = element_text(size=14, hjust=1),
+    text = element_text(size=32, family="azeret-mono"),
+    legend.text = element_text(size=16)
+  )
+)
 
-# apply fonts and use state abbreviations too
+
+# set state abbreviations
 aesthetic <- aes(y=state, x=year, fill=incidence)
 ggplot(datatall, aesthetic) + 
   geom_tile(width=1,height=1,colour="white",size=0.5) +
 # geom_tile(data = . %>% filter(region == "South"),width=1,height=1,colour="white",size=0.5) +
-  theme_minimal() +
   scale_fill_gradientn(
     limits=c(0,4000),
     values=c(0,0.01,0.02,0.03,0.09,0.1,0.15,0.25,0.4,0.5,1), 
@@ -165,24 +252,19 @@ ggplot(datatall, aesthetic) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
   ggtitle("Measles") +
-  annotate("text",label="Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=7) +
+  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=8) +
   theme(
-    legend.direction = "horizontal",
-    legend.position = c(0.5,-.1),
-    legend.title = element_blank(),
-    legend.key.height = unit(8,'pt'),
-    legend.key.width = unit(32,'pt'),
-    plot.margin=margin(2,2,4,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=20,family="azeret-mono"),
     title = element_text(size=32),
-    axis.text.x = element_text(size=20),
-    axis.text.y = element_text(size=16)
+    axis.text.x = element_text(size=22),
+    axis.text.y = element_text(size=14, hjust=1, color="deepskyblue"),
+    text = element_text(size=32, family="azeret-mono"),
+    legend.text = element_text(size=16)
   )
+
+
+
+
+
 
 
 
