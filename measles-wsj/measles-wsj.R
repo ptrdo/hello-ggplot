@@ -42,7 +42,7 @@ p
 
 # wrap the expression for easier execution
 (temp <- p + theme_bw())
-
+p
 
 # applying a new starting point (try _dark, _gray, _bw, _void, _test)
 (temp <- p + theme_classic())
@@ -81,7 +81,7 @@ theme_get()$panel.background
 p
 
 
-# apply some scales to set zero and flip the y-axis
+# apply some scales to expand to zero and flip the y-axis
 (temp <- temp +  
     scale_x_continuous(expand=c(0,0)) +
     scale_y_discrete(limits = rev) +
@@ -160,7 +160,7 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
 
 # title and annotate
 (p <- p +
-  ggtitle("Measles") +
+  ggtitle("Measles Instances") +
   geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="black",linetype=1) +
   annotate(
     "text",
@@ -173,33 +173,35 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
   )
 )
 
-# style text and text size (these WILL become defaults)
-mytheme <- theme_replace(
-  text = element_text(size=16, family="sans"),
-  title = element_text(size=16),
-  axis.text.x = element_text(size=12),
-  axis.text.y = element_text(size=8, hjust=1),
-  legend.text = element_text(size=10),
-  legend.title = element_text(size=10),
-  
-  # recoloring these can be handy when building charts...
-  panel.background = element_rect(fill="white",color="white"),
-  axis.line = element_line(color="white")
-)
+# DO NOT DO! Customizing fonts size WILL become defaults!
 
-# check the change
+# INSTEAD: Respect the base size (11)
+theme_get()$text$size
+mytheme <- theme_replace(
+  text = element_text(size=11, family="sans")
+)
+theme_get()$text$size
+
+
+# check any change
 p
 
-# style the legend (but ONLY for this chart!)
+# style the plot itself (applies ONLY to this chart!)
 (p <- p + 
   theme(
-    plot.margin=margin(2,3,4,3,"lines"),
+    title = element_text(size=16),
+    axis.text.y = element_text(size=7),
+    plot.margin=margin(2,4,4,3,"lines"),
     legend.direction = "horizontal",
     legend.position = c(0.5,-.1),
     legend.title = element_blank(),
     legend.text = element_text(size=8),
     legend.key.height = unit(10,'pt'),
-    legend.key.width = unit(32,'pt')
+    legend.key.width = unit(32,'pt'),
+    
+    # leave the default colors to help when building charts...
+    panel.background = element_rect(fill="white",color="white"),
+    axis.line = element_line(color="white")
   )
 )
 
@@ -208,7 +210,7 @@ p_original <- p
 
 
 ##########################
-# Kicking it up a notch...
+# Customizing the font...
 ##########################
 
 # add fonts
@@ -235,7 +237,7 @@ showtext_auto(T)
 showtext_auto(F)
 
 
-# the original is preserved
+# NOTE: the original is preserved
 p_original
 
 
@@ -266,11 +268,11 @@ p_simple <- ggplot(datatall, aesthetic) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles Cases") +
+  ggtitle("Measles Instances") +
   annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=8) +
   guides(fill=guide_colorbar(ticks.colour = NA)) +
   theme(
-    title = element_text(size=32),
+    title = element_text(size=28),
     axis.text.x = element_text(size=22),
     axis.text.y = element_text(size=14, hjust=1, color="red"),
     text = element_text(size=32, family="azeret-mono"),
@@ -281,7 +283,9 @@ p_simple <- ggplot(datatall, aesthetic) +
     legend.key.height = unit(10,'pt'),
     legend.key.width = unit(32,'pt'),
     legend.background = element_rect(fill=NA),
-    plot.margin=margin(2,3,4,3,"lines")
+    plot.margin=margin(2,5,4,5,"lines"),
+    panel.background = element_rect(fill="white",color="white"),
+    axis.line = element_line(color="white")
   )
 
 
@@ -304,10 +308,10 @@ p_point <- ggplot(datatall, aesthetic) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles Cases") +
+  ggtitle("Measles Instances") +
   annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=6,color="black") +
   theme(
-    title = element_text(size=32),
+    title = element_text(size=28),
     axis.text.x = element_text(size=22),
     axis.text.y = element_text(size=14, hjust=1, color="tomato"),
     text = element_text(size=32, family="azeret-mono"),
@@ -316,8 +320,9 @@ p_point <- ggplot(datatall, aesthetic) +
     legend.position = c(0.875,0.99),
     legend.direction = "horizontal",
     legend.background = element_rect(fill=NA),
-    plot.margin=margin(2,4,3,4,"lines"),
-    panel.background=element_rect(fill="#faf9f5")
+    plot.margin=margin(2,4,4,4,"lines"),
+    panel.background=element_rect(fill="#faf9f5",color="white"),
+    axis.line = element_line(color="white")
   )
 
 showtext_auto(T)
@@ -330,11 +335,24 @@ showtext_auto(F)
 ################################
 
 
+showtext_auto(F)
 p_original
+showtext_auto(T)
+p_simple
+p_point
 
+# install.packages("egg")
+library(egg)
 
+ggarrange(p_simple,
+          p_point,
+          labels = c("TILE", "POINT"),
+          nrow = 2)
 
+# install.packages("patchwork")
+library(patchwork)
 
+(q <- p_original + theme(title=element_text(size=28))) / p_point
 
 
 ################################
