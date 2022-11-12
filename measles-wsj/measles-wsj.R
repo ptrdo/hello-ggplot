@@ -1,5 +1,5 @@
-# clear workspace
-# this is important to zero-out ambient themes
+# clear the workspace!
+# this is important to zero-out ambient theme adjustments!
 rm(list=ls())
 ls()
 
@@ -124,7 +124,7 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
     )
 )
 
-# refine the gradient further, and set the legend
+# refine the gradient further (per original), and set the legend
 (p <- p +
   scale_fill_gradientn(
     limits=c(0,4000),
@@ -173,35 +173,16 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
   )
 )
 
-
-# style the legend
-mytheme <- theme_replace(
-  plot.margin=margin(2,3,4,3,"lines"),
-  legend.direction = "horizontal",
-  legend.position = c(0.5,-.1),
-  legend.title = element_blank(),
-  legend.text = element_text(size=8),
-  legend.key.height = unit(10,'pt'),
-  legend.key.width = unit(32,'pt')
-)
-
-# check the change
-p
-
-
-# style text and text size
+# style text and text size (these WILL become defaults)
 mytheme <- theme_replace(
   text = element_text(size=16, family="sans"),
   title = element_text(size=16),
   axis.text.x = element_text(size=12),
-  axis.text.y = element_text(size=8, hjust=1)
-)
-
-# check the change
-p
-
-# finally, blank the background and edge
-mytheme <- theme_replace(
+  axis.text.y = element_text(size=8, hjust=1),
+  legend.text = element_text(size=10),
+  legend.title = element_text(size=10),
+  
+  # recoloring these can be handy when building charts...
   panel.background = element_rect(fill="white",color="white"),
   axis.line = element_line(color="white")
 )
@@ -209,11 +190,31 @@ mytheme <- theme_replace(
 # check the change
 p
 
+# style the legend (but ONLY for this chart!)
+(p <- p + 
+  theme(
+    plot.margin=margin(2,3,4,3,"lines"),
+    legend.direction = "horizontal",
+    legend.position = c(0.5,-.1),
+    legend.title = element_blank(),
+    legend.text = element_text(size=8),
+    legend.key.height = unit(10,'pt'),
+    legend.key.width = unit(32,'pt')
+  )
+)
+
+# save this as a checkpoint
+p_original <- p
+
+
+##########################
+# Kicking it up a notch...
+##########################
 
 # add fonts
 library(showtext)
 font_add_google(name="Azeret Mono", family="azeret-mono")
-showtext_auto()
+showtext_auto(T)
 
 # apply the fonts and update sizes AS OVERRIDE TO PLOT
 (p <- p + 
@@ -231,11 +232,26 @@ showtext_auto()
     legend.text = element_text(size=16)
   )
 )
+showtext_auto(F)
+
+
+# the original is preserved
+p_original
+
+
+showtext_auto(T)
+p
+showtext_auto(F)
+
+
+################################
+# Simplify the gradient...
+################################
 
 
 # set aes to state abbreviations
 aesthetic <- aes(y=state, x=year, fill=incidence)
-ggplot(datatall, aesthetic) + 
+p_simple <- ggplot(datatall, aesthetic) + 
   geom_tile(width=1,height=1,colour="white",size=0.5) +
   scale_fill_gradientn(
     limits=c(0,4000),
@@ -258,46 +274,72 @@ ggplot(datatall, aesthetic) +
     axis.text.x = element_text(size=22),
     axis.text.y = element_text(size=14, hjust=1, color="red"),
     text = element_text(size=32, family="azeret-mono"),
+    legend.title = element_blank(),
     legend.text = element_text(size=16),
     legend.position = c(0.85,0.96),
+    legend.direction = "horizontal",
+    legend.key.height = unit(10,'pt'),
+    legend.key.width = unit(32,'pt'),
     legend.background = element_rect(fill=NA),
-    plot.margin=margin(2,4,3,4,"lines")
+    plot.margin=margin(2,3,4,3,"lines")
   )
 
 
-###########################################
+showtext_auto(T)
+p_simple
+showtext_auto(F)
 
-# blisters
+
+################################
+# Measles!...
+################################
+
+# reorient the data
 aesthetic <- aes(y=state, x=year)
-ggplot(datatall, aesthetic) + 
+p_point <- ggplot(datatall, aesthetic) + 
   geom_point(aes(size=incidence),color="tomato",stroke=0.5,alpha=0.8) +
   geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="tomato",linetype=3) +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="tomato",linetype=6) +
   scale_size_continuous(range=c(0.1,6),breaks=c(0,1e3,2e3),labels=c('0k','1k','2k')) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
   ggtitle("Measles Cases") +
-  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=6,color="tomato") +
+  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=6,color="black") +
   theme(
     title = element_text(size=32),
     axis.text.x = element_text(size=22),
     axis.text.y = element_text(size=14, hjust=1, color="tomato"),
     text = element_text(size=32, family="azeret-mono"),
+    legend.title = element_blank(),
     legend.text = element_text(size=16,color="tomato"),
-    legend.position = c(0.84,0.99),
+    legend.position = c(0.875,0.99),
+    legend.direction = "horizontal",
     legend.background = element_rect(fill=NA),
     plot.margin=margin(2,4,3,4,"lines"),
     panel.background=element_rect(fill="#faf9f5")
   )
 
+showtext_auto(T)
+p_point
+showtext_auto(F)
 
 
-###########################################
+################################
+# Put them all together...
+################################
 
 
-# TO DO REGIONS
+p_original
 
+
+
+
+
+
+################################
+# Adding Regions...
+################################
 
 # Categorize states into regions
 datatall$region <- setNames(state.region, state.abb)[datatall$state]
