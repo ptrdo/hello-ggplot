@@ -40,12 +40,15 @@ p <- ggplot(datatall, aesthetic) +
 p
 
 
-# wrap the expression for easier execution
+# wrap the expression for easier execution ("temp" isn't necessary, we're just making a copy)
 (temp <- p + theme_bw())
-p
+
 
 # applying a new starting point (try _dark, _gray, _bw, _void, _test)
 (temp <- p + theme_classic())
+
+
+p # stays the same
 
 
 # add breathing room around the plot (note that 'temp' preserves 'p')
@@ -59,6 +62,8 @@ p
 
 # the workspace theme can be set, updated, and extended independently
 mytheme <- theme_set(theme_classic()) 
+temp # a reminder (if this was left as "classic")
+p # stays the same
 
 
 # verify what the 'default' now is
@@ -79,7 +84,7 @@ theme_get()$panel.background
 
 # verify that the change works (using the workspace theme)
 p
-
+temp
 
 # apply some scales to expand to zero and flip the y-axis
 (temp <- temp +  
@@ -102,7 +107,12 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
 )
 
 # updates to line-items will supersede previous (see:breaks)
-(p <- p + scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)))
+(p <- p + 
+    scale_x_continuous(
+      expand=c(0,0),
+      breaks=seq(1920,2010,by=10)
+    )
+)
 
 
 # apply a simple gradient scale 
@@ -124,7 +134,10 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
     )
 )
 
-# refine the gradient further (per original), and set the legend
+# just a reminder...
+temp
+
+# refine the gradient further (per original), update legend
 (p <- p +
   scale_fill_gradientn(
     limits=c(0,4000),
@@ -157,6 +170,7 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
     na.value="ghostwhite"
   )
 )
+
 
 # title and annotate
 (p <- p +
@@ -219,19 +233,19 @@ font_add_google(name="Azeret Mono", family="azeret-mono")
 showtext_auto(T)
 
 # apply the fonts and update sizes AS OVERRIDE TO PLOT
-(p <- p + 
+(p <- p_original + 
   annotate(
     "text",
     label="Vaccine Introduced",
     family="azeret-mono",
-    x=1963,y=54,vjust=1,hjust=0,size=7
+    x=1963,y=54,vjust=1,hjust=0,size=4
   ) +
   theme(
-    title = element_text(size=32),
-    axis.text.x = element_text(size=24),
-    axis.text.y = element_text(size=14, hjust=1),
-    text = element_text(size=32, family="azeret-mono"),
-    legend.text = element_text(size=16)
+    text = element_text(size=11, family="azeret-mono"),
+    title = element_text(size=14),
+    # axis.text.x = element_text(size=24),
+    # axis.text.y = element_text(size=14, hjust=1),
+    # legend.text = element_text(size=16)
   )
 )
 showtext_auto(F)
@@ -269,19 +283,19 @@ p_simple <- ggplot(datatall, aesthetic) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
   ggtitle("Measles Instances") +
-  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=8) +
+  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=4) +
   guides(fill=guide_colorbar(ticks.colour = NA)) +
   theme(
-    title = element_text(size=28),
-    axis.text.x = element_text(size=22),
-    axis.text.y = element_text(size=14, hjust=1, color="red"),
-    text = element_text(size=32, family="azeret-mono"),
+    text = element_text(size=16, family="azeret-mono"),
+    title = element_text(size=14),
+    axis.text.x = element_text(size=12),
+    axis.text.y = element_text(size=6, hjust=1, color="red"),
     legend.title = element_blank(),
-    legend.text = element_text(size=16),
-    legend.position = c(0.85,0.96),
+    legend.text = element_text(size=10),
+    legend.position = c(0.86,0.96),
     legend.direction = "horizontal",
     legend.key.height = unit(10,'pt'),
-    legend.key.width = unit(32,'pt'),
+    legend.key.width = unit(24,'pt'),
     legend.background = element_rect(fill=NA),
     plot.margin=margin(2,5,4,5,"lines"),
     panel.background = element_rect(fill="white",color="white"),
@@ -293,6 +307,8 @@ showtext_auto(T)
 p_simple
 showtext_auto(F)
 
+#remember...
+p_original
 
 ################################
 # Measles!...
@@ -309,14 +325,14 @@ p_point <- ggplot(datatall, aesthetic) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
   ggtitle("Measles Instances") +
-  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=6,color="black") +
+  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=4,color="black") +
   theme(
-    title = element_text(size=28),
-    axis.text.x = element_text(size=22),
-    axis.text.y = element_text(size=14, hjust=1, color="tomato"),
-    text = element_text(size=32, family="azeret-mono"),
+    text = element_text(size=16, family="azeret-mono"),
+    title = element_text(size=14),
+    axis.text.x = element_text(size=12),
+    axis.text.y = element_text(size=6, hjust=1, color="tomato"),
     legend.title = element_blank(),
-    legend.text = element_text(size=16,color="tomato"),
+    legend.text = element_text(size=10,color="tomato"),
     legend.position = c(0.875,0.99),
     legend.direction = "horizontal",
     legend.background = element_rect(fill=NA),
@@ -331,7 +347,76 @@ showtext_auto(F)
 
 
 ################################
-# Put them all together...
+# Using a device
+################################
+
+# the plot pane is the default device
+p_original
+dev.off()
+
+# new devices can be made
+dev.new(width=1600, height=900, unit="px", noRStudioGD=T)
+p_point
+
+# the current (cur) device is where plots are rendered
+p_original
+
+# a list is available
+dev.list()
+dev.cur()
+
+# make another device to plot something else
+dev.new(width=1600, height=900, unit="px", noRStudioGD=T)
+p_point
+
+# off() will close
+dev.next()
+dev.off()
+
+
+################################
+# Saving a plot
+################################
+
+
+# saving can be unlike plotting to a device
+ggsave(
+  "p_point.png", 
+  plot = p_point, 
+  unit = "px", 
+  width = 1600, 
+  height = 900
+)
+
+# not the same as this
+p_point
+
+# resolution matters!
+ggsave(
+  "p_point.png", 
+  plot = p_point, 
+  width = 16, 
+  height = 9, 
+  units = "in", 
+  dpi = 96 # ~default screen resolution
+)
+
+# 96 dpi * 16x19 = 1152x648 pixels
+
+ggsave(
+  "p_point.png", 
+  plot = p_point + theme(
+    text = element_text(size=20),
+    title = element_text(size=20)), 
+  width = 16, 
+  height = 9, 
+  units = "in", 
+  dpi = 96 # ~default screen resolution
+)
+
+
+################################
+# Next up: Put them all together...
 ################################
 
 
@@ -356,7 +441,7 @@ library(patchwork)
 
 
 ################################
-# Adding Regions...
+# Extra credit: Adding Regions...
 ################################
 
 # Categorize states into regions
@@ -414,192 +499,3 @@ ggplot(dataregions, aesthetic) +
     axis.text.x = element_text(size=20),
     axis.text.y = element_text(size=16)
   )
-
-
-######################
-
-datawide$region <- setNames(state.region, state.abb)[datawide$state]
-datawide[["region"]][is.na(datawide[["region"]])] <- "Northeast"
-
-datatallr <- datawide %>% group_by(region, year) %>%
-  summarise(cases=if(all(is.na(cases))) NA else
-    sum(cases, na.rm=T))
-
-
-aesthetic <- aes(y=region, x=year, fill=cases)
-
-myplot <- ggplot(datatallr, aesthetic) + 
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
-  theme_minimal() +
-  scale_fill_gradientn(
-    limits=c(0,max(datatallr$cases)),
-    values=c(0,0.01,0.02,0.03,0.09,0.1,0.15,0.25,0.4,0.5,1), 
-    colours=c("#e7f0fa","aliceblue","lightblue","deepskyblue","seagreen","gold","orange","goldenrod","brown","orangered","firebrick"),
-    breaks=(seq(0,4e3,by=1e3)),
-    labels=c("0k","1k","2k","3k","4k"),
-    na.value="ghostwhite"
-  ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
-  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
-  scale_y_discrete(limits = rev) +
-  xlab(NULL) + ylab(NULL) +
-  theme(
-    legend.direction = "horizontal",
-    legend.position = c(0.5,-.1),
-    legend.title = element_blank(),
-    legend.key.height = unit(8, 'pt'),
-    plot.margin=margin(2,2,4,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=15, family="azeret-mono"),
-    axis.text.x = element_text(size=20))
-
-# supersedes the existing 'fill' (to correct the label)
-myplot + 
-  scale_fill_gradientn(
-    limits=c(0,max(datatallr$cases)),
-    values=c(0,0.01,0.05,0.1,0.6,1), 
-    colours=c("aliceblue","darkcyan","yellow","orangered","firebrick"),
-    breaks=(seq(0,divs*4,by=divs)),
-    labels=c("0k","121k","242k","363k","484k")
-  )
-
-myplot
-
-myplot
-
-myplot + 
-  scale_fill_gradientn(
-    limits=c(0,max(datatall$cases)),
-    values=c(0,0.01,0.05,0.1,0.6,1), 
-    colours=c("aliceblue","darkcyan","yellow","orangered","firebrick"),
-    breaks=(seq(0,divs*4,by=divs)),
-    labels=c("0k","36k","72k","108k","144k")
-  )
-
-
-
-# to see what's in the plot (for test)
-layer_data(p)
-layer_grob(p)
-layer_scales(p)
-benchplot(p)
-
-
-
-
-ggplot(datatall, aes(y=statename, x=year, fill=cases)) + 
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
-  theme_minimal() +
-  scale_fill_gradientn(
-    limits=c(0,max(datatall$cases)),
-    values=c(0,0.01,0.05,0.1,0.6,1), 
-    colours=c("aliceblue","darkcyan","yellow","orangered","firebrick"),
-    breaks=(seq(0,divs*4,by=divs)),
-    labels=c("0k","36k","72k","108k","144k")
-  ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
-  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
-  scale_y_discrete(limits = rev) +
-  xlab(NULL) + ylab(NULL) +
-  theme(
-    legend.direction = "horizontal",
-    legend.position = c(0.5,-.1),
-    legend.title = element_blank(),
-    legend.key.height = unit(8, 'pt'),
-    plot.margin=margin(2,2,3,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=15, family="azeret-mono"),
-    axis.text.x = element_text(size=20))   
-
-
-pp <- ggplot() +
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
-  theme_minimal() +
-  scale_fill_gradientn(
-    limits=c(0,max(datatall$cases)),
-    values=c(0,0.01,0.05,0.1,0.6,1), 
-    colours=c("aliceblue","darkcyan","yellow","orangered","firebrick"),
-    breaks=(seq(0,divs*4,by=divs)),
-    labels=c("0k","36k","72k","108k","144k")
-  ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
-  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
-  scale_y_discrete(limits = rev) +
-  xlab(NULL) + ylab(NULL) +
-  theme(
-    plot.margin=margin(2,2,2,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=15, family="azeret-mono"),
-    axis.text.x = element_text(size=20))
-
-
-pp + ggplot(datatall, aes(y=statename, x=year, fill=cases))
-
-
-# add fonts
-library(showtext)
-font_add_google(name="Azeret Mono", family="azeret-mono")
-font_add_google(name="Barlow", family="barlow")
-showtext_auto()
-
-ggplot(datatall, aes(y=region, x=year, fill=cases)) + 
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
-  theme_minimal() +
-  scale_fill_gradientn(
-    limits=c(0,max(datatall$cases)),
-    values=c(0,0.01,0.05,0.1,0.6,1), 
-    colours=c("aliceblue","darkcyan","yellow","orangered","firebrick"),
-    breaks=(seq(0,divs*4,by=divs)),
-    labels=c("0k","36k","72k","108k","144k")
-    ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
-  scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
-  scale_y_discrete(limits = rev) +
-  xlab(NULL) + ylab(NULL) +
-  theme(
-    plot.margin=margin(2,2,2,2,"lines"),
-    axis.ticks = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.major.y = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=15, family="azeret-mono"),
-    axis.text.x = element_text(size=20))    
-  
-
-
-
-
-# add the regions to group them
-datawide$region <- setNames(state.region, state.abb)[datawide$state]
-
-# DC is NA
-datawide[is.na(datawide$region),]
-
-# DC to Northeast
-datawide[["region"]][is.na(datawide[["region"]])] <- "Northeast"
-
-# redo the tall
-datatall <- datawide %>% group_by(region, state, year) %>%
-  summarise(cases=if(all(is.na(cases))) NA else
-    sum(cases, na.rm=T))
-
-
-
-                      
