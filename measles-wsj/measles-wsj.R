@@ -8,12 +8,12 @@ library(tidyverse) # read_csv
 library(reshape) # melt
 
 
-tycho <-  read_csv("measles-wsj/data/tycho_measles_1928_2010.csv")
+tycho <-  read_csv('measles-wsj/data/tycho_measles_1928_2010.csv')
 
 # prepare the data
 datatall <- data.frame(tycho)
-datatall <- melt(datatall, id.vars = c("Year","AdminISO","AdminName","Population","Cases","Incidence"), measure.vars = integer())
-colnames(datatall) <- c("year","state","statename","population","cases","incidence")
+datatall <- melt(datatall, id.vars = c('Year','AdminISO','AdminName','Population','Cases','Incidence'), measure.vars = integer())
+colnames(datatall) <- c('year','state','statename','population','cases','incidence')
 
 
 # basics
@@ -40,7 +40,7 @@ p <- ggplot(datatall, aesthetic) +
 p
 
 
-# wrap the expression for easier execution ("temp" isn't necessary, we're just making a copy)
+# wrap the expression for easier execution ('temp' isn't necessary, we're just making a copy)
 (temp <- p + theme_bw())
 
 
@@ -54,7 +54,7 @@ p # stays the same
 # add breathing room around the plot (note that 'temp' preserves 'p')
 (temp <- p +
   theme(
-    plot.margin = margin(2,3,4,3,"lines"),
+    plot.margin = margin(2,3,4,3,'lines'),
     axis.ticks = element_blank()
   )
 )
@@ -62,19 +62,20 @@ p # stays the same
 
 # the workspace theme can be set, updated, and extended independently
 mytheme <- theme_set(theme_classic()) 
-temp # a reminder (if this was left as "classic")
+temp # a reminder (if this was left as 'classic')
 p # stays the same
 
 
 # verify what the 'default' now is
 theme_get()$panel.background
 
+theme_get()
 
 # modify the custom theme
 mytheme <- theme_replace(
-  plot.margin = margin(2,3,4,3,"lines"),
+  plot.margin = margin(2,3,4,3,'lines'),
   axis.ticks = element_blank(),
-  panel.background=element_rect(fill="beige")
+  panel.background=element_rect(fill='beige')
 )
 
 
@@ -100,7 +101,7 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
 
 # change the chart method to 'tile', keeping the basics (from above)
 (p <- ggplot(datatall, aesthetic) +
-  geom_tile(width=1, height=1, colour="white", size=0.5) +
+  geom_tile(width=1, height=1, colour='white', size=0.5) +
   scale_x_continuous(expand=c(0,0)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL)
@@ -120,7 +121,7 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
   scale_fill_gradientn(
     limits=c(0,4000),
     values=c(0,1),
-    colours=c("gold","red")
+    colours=c('gold','red')
   )
 )
 
@@ -129,8 +130,8 @@ aesthetic = aes(x=year, y=statename, fill=incidence)
     scale_fill_gradientn(
       limits=c(0,4000),
       values=c(0,0.05,0.2,1),
-      colours=c("beige","gold","red","firebrick"),
-      na.value="white"
+      colours=c('beige','gold','red','firebrick'),
+      na.value='white'
     )
 )
 
@@ -154,31 +155,31 @@ temp
       0.5,
       1), 
     colours=c(
-      "#e7f0fa",
-      "aliceblue",
-      "lightblue",
-      "deepskyblue",
-      "seagreen",
-      "gold",
-      "orange",
-      "goldenrod",
-      "brown",
-      "orangered",
-      "firebrick"),
+      '#e7f0fa',
+      'aliceblue',
+      'lightblue',
+      'deepskyblue',
+      'seagreen',
+      'gold',
+      'orange',
+      'goldenrod',
+      'brown',
+      'orangered',
+      'firebrick'),
     breaks=(seq(0,4e3,by=1e3)),
-    labels=c("0k","1k","2k","3k","4k"),
-    na.value="ghostwhite"
+    labels=c('0k','1k','2k','3k','4k'),
+    na.value='ghostwhite'
   )
 )
 
 
 # title and annotate
 (p <- p +
-  ggtitle("Measles Instances") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="black",linetype=1) +
+  ggtitle('Measles Instances') +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color='black',linetype=1) +
   annotate(
-    "text",
-    label="Vaccine Introduced", 
+    'text',
+    label='Vaccine Introduced', 
     x=1963, 
     y=53, 
     vjust=1, 
@@ -192,7 +193,7 @@ temp
 # INSTEAD: Respect the base size (11)
 theme_get()$text$size
 mytheme <- theme_replace(
-  text = element_text(size=11, family="sans")
+  text = element_text(size=11, family='')
 )
 theme_get()$text$size
 
@@ -205,8 +206,8 @@ p
   theme(
     title = element_text(size=16),
     axis.text.y = element_text(size=7),
-    plot.margin=margin(2,4,4,3,"lines"),
-    legend.direction = "horizontal",
+    plot.margin=margin(2,4,4,3,'lines'),
+    legend.direction = 'horizontal',
     legend.position = c(0.5,-.1),
     legend.title = element_blank(),
     legend.text = element_text(size=8),
@@ -214,8 +215,8 @@ p
     legend.key.width = unit(32,'pt'),
     
     # leave the default colors to help when building charts...
-    panel.background = element_rect(fill="white",color="white"),
-    axis.line = element_line(color="white")
+    panel.background = element_rect(fill='white',color='white'),
+    axis.line = element_line(color='white')
   )
 )
 
@@ -229,19 +230,19 @@ p_original <- p
 
 # add fonts
 library(showtext)
-font_add_google(name="Azeret Mono", family="azeret-mono")
+font_add_google(name='Azeret Mono', family='azeret-mono')
 showtext_auto(T)
 
 # apply the fonts and update sizes AS OVERRIDE TO PLOT
 (p <- p_original + 
   annotate(
-    "text",
-    label="Vaccine Introduced",
-    family="azeret-mono",
+    'text',
+    label='Vaccine Introduced',
+    family='azeret-mono',
     x=1963,y=54,vjust=1,hjust=0,size=4
   ) +
   theme(
-    text = element_text(size=11, family="azeret-mono"),
+    text = element_text(size=11, family='azeret-mono'),
     title = element_text(size=14),
     # axis.text.x = element_text(size=24),
     # axis.text.y = element_text(size=14, hjust=1),
@@ -268,38 +269,38 @@ showtext_auto(F)
 # set aes to state abbreviations
 aesthetic <- aes(y=state, x=year, fill=incidence)
 p_simple <- ggplot(datatall, aesthetic) + 
-  geom_tile(width=1,height=1,colour="white",size=0.5) +
+  geom_tile(width=1,height=1,colour='white',size=0.5) +
   scale_fill_gradientn(
     limits=c(0,4000),
     values=c(0,0.05,0.2,0.4,1), 
-    colours=c("seashell","tomato","red","firebrick","firebrick"),
+    colours=c('seashell','tomato','red','firebrick','firebrick'),
     breaks=(seq(0,4e3,by=1e3)),
-    labels=c("0k","1k","2k","3k","4k"),
-    na.value="white"
+    labels=c('0k','1k','2k','3k','4k'),
+    na.value='white'
   ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color='white') +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color='red',linetype=1) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles Instances") +
-  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=54,vjust=1,hjust=0,size=4) +
+  ggtitle('Measles Instances') +
+  annotate('text',label='1963 Vaccine Introduced',family='azeret-mono',x=1963,y=54,vjust=1,hjust=0,size=4) +
   guides(fill=guide_colorbar(ticks.colour = NA)) +
   theme(
-    text = element_text(size=16, family="azeret-mono"),
+    text = element_text(size=16, family='azeret-mono'),
     title = element_text(size=14),
     axis.text.x = element_text(size=12),
-    axis.text.y = element_text(size=6, hjust=1, color="red"),
+    axis.text.y = element_text(size=6, hjust=1, color='red'),
     legend.title = element_blank(),
     legend.text = element_text(size=10),
     legend.position = c(0.86,0.96),
-    legend.direction = "horizontal",
+    legend.direction = 'horizontal',
     legend.key.height = unit(10,'pt'),
     legend.key.width = unit(24,'pt'),
     legend.background = element_rect(fill=NA),
-    plot.margin=margin(2,5,4,5,"lines"),
-    panel.background = element_rect(fill="white",color="white"),
-    axis.line = element_line(color="white")
+    plot.margin=margin(2,5,4,5,'lines'),
+    panel.background = element_rect(fill='white',color='white'),
+    axis.line = element_line(color='white')
   )
 
 
@@ -317,28 +318,28 @@ p_original
 # reorient the data
 aesthetic <- aes(y=state, x=year)
 p_point <- ggplot(datatall, aesthetic) + 
-  geom_point(aes(size=incidence),color="tomato",stroke=0.5,alpha=0.8) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color="tomato",linetype=6) +
+  geom_point(aes(size=incidence),color='tomato',stroke=0.5,alpha=0.8) +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color='white') +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.5,color='tomato',linetype=6) +
   scale_size_continuous(range=c(0.1,6),breaks=c(0,1e3,2e3),labels=c('0k','1k','2k')) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles Instances") +
-  annotate("text",label="1963 Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=4,color="black") +
+  ggtitle('Measles Instances') +
+  annotate('text',label='1963 Vaccine Introduced',family='azeret-mono',x=1963,y=53,vjust=1,hjust=0,size=4,color='black') +
   theme(
-    text = element_text(size=16, family="azeret-mono"),
+    text = element_text(size=16, family='azeret-mono'),
     title = element_text(size=14),
     axis.text.x = element_text(size=12),
-    axis.text.y = element_text(size=6, hjust=1, color="tomato"),
+    axis.text.y = element_text(size=6, hjust=1, color='tomato'),
     legend.title = element_blank(),
-    legend.text = element_text(size=10,color="tomato"),
+    legend.text = element_text(size=10,color='tomato'),
     legend.position = c(0.875,0.99),
-    legend.direction = "horizontal",
+    legend.direction = 'horizontal',
     legend.background = element_rect(fill=NA),
-    plot.margin=margin(2,4,4,4,"lines"),
-    panel.background=element_rect(fill="#faf9f5",color="white"),
-    axis.line = element_line(color="white")
+    plot.margin=margin(2,4,4,4,'lines'),
+    panel.background=element_rect(fill='#faf9f5',color='white'),
+    axis.line = element_line(color='white')
   )
 
 showtext_auto(T)
@@ -355,7 +356,7 @@ p_original
 dev.off()
 
 # new devices can be made
-dev.new(width=1600, height=900, unit="px", noRStudioGD=T)
+dev.new(width=1600, height=900, unit='px', noRStudioGD=T)
 p_point
 
 # the current (cur) device is where plots are rendered
@@ -366,7 +367,7 @@ dev.list()
 dev.cur()
 
 # make another device to plot something else
-dev.new(width=1600, height=900, unit="px", noRStudioGD=T)
+dev.new(width=1600, height=900, unit='px', noRStudioGD=T)
 p_point
 
 # off() will close
@@ -381,9 +382,9 @@ dev.off()
 
 # saving can be unlike plotting to a device
 ggsave(
-  "p_point.png", 
+  'p_point.png', 
   plot = p_point, 
-  unit = "px", 
+  unit = 'px', 
   width = 1600, 
   height = 900
 )
@@ -393,24 +394,24 @@ p_point
 
 # resolution matters!
 ggsave(
-  "p_point.png", 
+  'p_point.png', 
   plot = p_point, 
   width = 16, 
   height = 9, 
-  units = "in", 
+  units = 'in', 
   dpi = 96 # ~default screen resolution
 )
 
 # 96 dpi * 16x19 = 1152x648 pixels
 
 ggsave(
-  "p_point.png", 
+  'p_point.png', 
   plot = p_point + theme(
     text = element_text(size=20),
     title = element_text(size=20)), 
   width = 16, 
   height = 9, 
-  units = "in", 
+  units = 'in', 
   dpi = 96 # ~default screen resolution
 )
 
@@ -426,15 +427,15 @@ showtext_auto(T)
 p_simple
 p_point
 
-# install.packages("egg")
+# install.packages('egg')
 library(egg)
 
 ggarrange(p_simple,
           p_point,
-          labels = c("TILE", "POINT"),
+          labels = c('TILE', 'POINT'),
           nrow = 2)
 
-# install.packages("patchwork")
+# install.packages('patchwork')
 library(patchwork)
 
 (q <- p_original + theme(title=element_text(size=28))) / p_point
@@ -448,7 +449,7 @@ library(patchwork)
 datatall$region <- setNames(state.region, state.abb)[datatall$state]
 
 # Incorporate DC into Northeast region
-datatall[["region"]][is.na(datatall[["region"]])] <- "Northeast"
+datatall[['region']][is.na(datatall[['region']])] <- 'Northeast'
 
 dataregions <- datatall %>% 
   group_by(region, year) %>%
@@ -464,37 +465,37 @@ dataregions <- dataregions %>%
 # apply fonts and use state abbreviations too
 aesthetic <- aes(y=region, x=year, fill=incidence)
 ggplot(dataregions, aesthetic) + 
-  geom_tile(width=1,height=1,colour="white",size=0.5) +
-# geom_tile(data = . %>% filter(region == "South"),width=1,height=1,colour="white",size=0.5) +
+  geom_tile(width=1,height=1,colour='white',size=0.5) +
+# geom_tile(data = . %>% filter(region == 'South'),width=1,height=1,colour='white',size=0.5) +
   theme_minimal() +
   scale_fill_gradientn(
     limits=c(0,4000),
     values=c(0,0.01,0.02,0.03,0.09,0.1,0.15,0.25,0.4,0.5,1), 
-    colours=c("#e7f0fa","aliceblue","lightblue","deepskyblue","seagreen","gold","orange","goldenrod","brown","orangered","firebrick"),
+    colours=c('#e7f0fa','aliceblue','lightblue','deepskyblue','seagreen','gold','orange','goldenrod','brown','orangered','firebrick'),
     breaks=(seq(0,4e3,by=1e3)),
-    labels=c("0k","1k","2k","3k","4k"),
-    na.value="ghostwhite"
+    labels=c('0k','1k','2k','3k','4k'),
+    na.value='ghostwhite'
   ) +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color="white") +
-  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color="red",linetype=1) +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=3,color='white') +
+  geom_segment(x=1962.5,xend=1962.5,y=0,yend=60,size=0.3,color='red',linetype=1) +
   scale_x_continuous(expand=c(0,0),breaks=seq(1920,2010,by=10)) +
   scale_y_discrete(limits = rev) +
   xlab(NULL) + ylab(NULL) +
-  ggtitle("Measles") +
-  annotate("text",label="Vaccine Introduced",family="azeret-mono",x=1963,y=53,vjust=1,hjust=0,size=7) +
+  ggtitle('Measles') +
+  annotate('text',label='Vaccine Introduced',family='azeret-mono',x=1963,y=53,vjust=1,hjust=0,size=7) +
   theme(
-    legend.direction = "horizontal",
+    legend.direction = 'horizontal',
     legend.position = c(0.5,-.1),
     legend.title = element_blank(),
     legend.key.height = unit(8,'pt'),
     legend.key.width = unit(32,'pt'),
-    plot.margin=margin(2,2,4,2,"lines"),
+    plot.margin=margin(2,2,4,2,'lines'),
     axis.ticks = element_blank(),
     panel.grid.major.x = element_blank(), 
     panel.grid.major.y = element_blank(), 
     panel.grid.minor.y = element_blank(),
-    panel.background=element_rect(fill="white",color="white"),
-    text = element_text(size=20,family="azeret-mono"),
+    panel.background=element_rect(fill='white',color='white'),
+    text = element_text(size=20,family='azeret-mono'),
     title = element_text(size=32),
     axis.text.x = element_text(size=20),
     axis.text.y = element_text(size=16)
