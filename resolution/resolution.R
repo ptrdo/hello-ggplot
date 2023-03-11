@@ -28,8 +28,8 @@ p = ggplot(wave,aes(Time,Amplitude,colour='cosine')) +
     expand=c(0,0), 
     limits=c(-4,4),
     breaks=c(-0.4,0,0.4)) +
-  xlab(label='\u2B62  Elapsed Time  \u2B62' ) +
-  ylab(label='\u2190 Amplitude \u2B62') +
+  xlab(label='Time') +
+  ylab(label='Amplitude') +
   theme(
     text=element_text(size=unit(20,'pt')),
     plot.margin=margin(4,4,3,3,'lines'),
@@ -62,11 +62,12 @@ theme_get()$text$size
 
 p
 
-png('resolution/output/PLOTA.png', width=898, height=698)
+png('resolution/output/PLOTA.png', width=898, height=698) 
 p$layers[[1]]$aes_params$size <- unit(72,'pt')
 plot(p + (theme(text = element_text(size=unit(22,'pt')))))
 plot(p)
 dev.off()
+
 
 ggsave(
   filename = 'plot-2x4x3x200.png', 
