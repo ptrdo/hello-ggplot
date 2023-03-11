@@ -47,7 +47,9 @@ p = ggplot(wave,aes(Time,Amplitude,colour='cosine')) +
   annotate('text', 0, 0, label='SIZE', color='white', alpha=0.7,
     family='sans', fontface='bold', size=unit(48,'pt')) +
   geom_point(color='white',size=4) +
-  with_shadow(geom_point(size=2),sigma=5,x_offset=0,y_offset=30,colour='#8cc6d9')
+  geom_point(color='red',size=2)
+  # with_shadow(geom_point(size=2),sigma=5,x_offset=0,y_offset=30,colour='#8cc6d9')
+
 
 
 p
@@ -58,7 +60,7 @@ theme_get()$text$size
 
 p
 
-png('PLOTA.png', width=898, height=698)
+png('resolution/output/PLOTA.png', width=898, height=698)
 p$layers[[1]]$aes_params$size <- unit(72,'pt')
 plot(p + (theme(text = element_text(size=unit(22,'pt')))))
 plot(p)
@@ -68,7 +70,7 @@ ggsave(
   filename = 'plot-2x4x3x200.png', 
   plot = p,
   device = png, 
-  path = 'output',
+  path = 'resolution/output',
   scale = 2, # +/- dimension
   width = 4,
   height = 3, 
@@ -80,7 +82,7 @@ ggsave(
   filename = 'plot-3x3x2x200.png', 
   plot = p,
   device = png, 
-  path = 'output',
+  path = 'resolution/output',
   scale = 3.25, # +/- dimension
   width = 3,
   height = 2.25, 

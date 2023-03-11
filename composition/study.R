@@ -10,6 +10,8 @@ if (F) {
   install.packages('ggimage')
 }
 
+options
+
 library(tidyverse) # read_csv
 library(ggplot2)
 library(magick) # ggimage
