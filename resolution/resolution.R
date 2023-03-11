@@ -11,19 +11,21 @@ if (F) {
 library(ggplot2)
 library(png)
 
-theme_set(theme_gray())
+theme_set(theme_light())
 
-steps <- seq(-16,16,0.3)
+steps <- seq(-16,16,0.2)
 wave <- data.frame(Time=steps,Amplitude=cos(steps))
   
-p = ggplot(wave,aes(Time,Amplitude,colour='cosine')) +
-  scale_color_manual(values=c('tomato'),name='wave') +
-  geom_point(color='white',size=3) +
-  geom_point(aes(labels='cosine'),color='red',size=1) +
+p = ggplot(wave,aes(Time,Amplitude,colour='key')) +
+  ggtitle('Getting the Resolution Correct') +  
+  annotate('text',0,0,label='SIZE',color='white',alpha=0.2,fontface='bold',size=unit(30,'pt')) +
+  scale_color_manual(values=c('cyan'),name='title') +
+  geom_point(size=1) +
+  # geom_point(size=1) +
   scale_x_continuous(
     expand=c(0,0), 
     limits=c(-16,16),
-    breaks=c(-3,0,3)) +
+    breaks=c(-2,2)) +
   scale_y_continuous(
     expand=c(0,0), 
     limits=c(-4,4),
@@ -33,18 +35,20 @@ p = ggplot(wave,aes(Time,Amplitude,colour='cosine')) +
   theme(
     text=element_text(size=unit(20,'pt')),
     plot.margin=margin(4,4,3,3,'lines'),
-    panel.background=element_rect(fill='lightblue'),
+    panel.background=element_rect(fill='darkslategrey'),
     axis.ticks=element_blank(),
     axis.text=element_blank(),
-    #legend.text=element_text(),
+    legend.text=element_text(size=unit(15,'pt'),color='white'),
+    legend.title=element_text(size=unit(15,'pt'),color='white'),
+    legend.justification='right',
     legend.direction='horizontal',
-    legend.position=c(0.9,0.9),
-    legend.background=element_rect(fill='white'),
-    #legend.key=element_blank(),
-    legend.title=element_text(size=unit(15,'pt')),
-    legend.margin=margin(c(0.5,1,0.5,1),unit="lines")
-  ) +
-x
+    legend.position=c(1,1),
+    legend.background=element_rect(fill='transparent'),
+    legend.key=element_blank(),
+    legend.margin=margin(c(4,1,1,1),unit="lines"),
+    panel.grid.major=element_line(colour="transparent"),
+    panel.grid.minor=element_line(colour="cyan")
+  )
 
 
 
