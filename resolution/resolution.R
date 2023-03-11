@@ -26,8 +26,8 @@ p = ggplot(wave,aes(Time,Amplitude,colour='cosine')) +
     expand=c(0,0), 
     limits=c(-4,4),
     breaks=c(-0.4,0,0.4)) +
-  xlab(label='🠦  Elapsed Time  🠦' ) +
-  ylab(label='🠤 Amplitude 🠦') +
+  xlab(label='\u2B62  Elapsed Time  \u2B62' ) +
+  ylab(label='\u2190 Amplitude \u2B62') +
   theme(
     text=element_text(size=unit(20,'pt')),
     plot.margin=margin(4,4,3,3,'lines'),
