@@ -3,13 +3,15 @@
 rm(list=ls())
 ls()
 
-# install.packages('ggplot')
-# install.packages('png')
-# install.packages('ggfx')
+if (F) {
+  install.packages('ggplot')
+  install.packages('png')
+  # install.packages('ggfx')
+}
 
 library(ggplot2)
 library(png)
-library(ggfx) # with_shadow
+# library(ggfx) # with_shadow
 
 theme_set(theme_gray())
 
