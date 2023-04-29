@@ -21,7 +21,7 @@ library(magick)
 library(rsvg)
 
 
-# set the path from the R workspace to the output folder
+# set an existing destination for output relative to the R workspace...
 output_path <- 'hello-ggplot/layout/output'
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,7 +131,7 @@ textplot <- ggplot(waves, aes(Time, Amplitude)) +
     fill='lemonchiffon',
     width=1,
     color='black', 
-    size=6, 
+    size=unit(7,'pt'), 
     family='plexsans',
     lineheight=unit(1.5,'lines'),
     box.padding=unit(3,'lines'),
@@ -178,6 +178,9 @@ rsvg_svg(logo_url,paste(output_path,logo_file,sep='/'))
 # import the converted svg
 logo_svg <- image_read_svg(paste(output_path,logo_file,sep='/'))
 
+# to view result
+# View(logo_svg)
+
 # create a simple space to plot the copyright and logo
 df <- data.frame(x=0:1,y=0:1)
 
@@ -210,6 +213,20 @@ tailplot <- ggplot(df) +
 
 # view the plot
 tailplot
+
+# output to the intended resolution
+ggsave(
+  filename = 'powerpoint_fig_04.png', 
+  path = output_path,
+  plot = tailplot,
+  device = png, 
+  bg = 'white',
+  units = c('in'),
+  width = 16,
+  height = 9, 
+  scale = 1, # +/- dimension
+  dpi = 180 # +/- resolution
+)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 5. ASSEMBLE THE PARTS OF THE POWERPOINT SLIDE
@@ -295,5 +312,4 @@ ggsave(
 
 # finally, return font rendering to normal
 showtext_auto(F)
-
 
