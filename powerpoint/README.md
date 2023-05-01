@@ -10,8 +10,6 @@ The final plot:
 
 ### Gist
 
-***
-
 While it might seem convenient to rely on Adobe Illustrator for the finishing touches on a plot and then assemble the export into PowerPoint with additional graphics, annotations, titles, and explanations, the result can be a folder full of files and a complicated update process whenever the underlying data changes. This tutorial explores how a plot might incorporate some of that polish itself, making for slide decks that are easier to build, update, and maintain.
 
 ***
