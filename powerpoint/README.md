@@ -1,4 +1,4 @@
-###### This is pre-released software. Please **[log issues](/issues)** found.
+###### This is pre-released software. Please **[log issues](https://github.com/ptrdo/hello-ggplot/issues)** found.
 # Plotting a PowerPoint slide from R
 A Deepnote Notebook and companion R script discussing layout, fonts, resolution, and aspect ratio. No external data is required and there are few dependencies.
 
