@@ -22,7 +22,7 @@ library(rsvg)
 
 
 # set an existing destination for output relative to the R workspace...
-output_path <- 'hello-ggplot/layout/output'
+output_path <- 'hello-ggplot/powerpoint/output'
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 1. CREATE A CHART FOR A POWERPOINT SLIDE
